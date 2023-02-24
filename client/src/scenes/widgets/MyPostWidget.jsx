@@ -18,7 +18,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
-import DropZone from "react-dropzone";
+import Dropzone from "react-dropzone";
 import UserImage from "components/UserImageWidget";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const MyPostWidget = ({ picturePath }) => {
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
@@ -43,10 +43,10 @@ const MyPostWidget = ({ picturePath }) => {
     formData.append("description", post);
     if (image) {
       formData.append("picture", image);
-      formData.append("picture", image.name);
+      formData.append("picturePath", image.name);
     }
 
-    const response = await fetch("http://localhost:3001/posts", {
+    const response = await fetch(`http://localhost:3001/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -80,7 +80,7 @@ const MyPostWidget = ({ picturePath }) => {
           mt="1rem"
           p="1rem"
         >
-          <DropZone
+          <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
             onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
@@ -114,16 +114,15 @@ const MyPostWidget = ({ picturePath }) => {
                 )}
               </FlexBetween>
             )}
-          </DropZone>
+          </Dropzone>
         </Box>
       )}
 
       <Divider sx={{ margin: "1.25rem 0" }} />
 
       <FlexBetween>
-        {/*this will turn off and open the image dropzone*/}
         <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
-          <ImageOutlined SX={{ color: mediumMain }} />
+          <ImageOutlined sx={{ color: mediumMain }} />
           <Typography
             color={mediumMain}
             sx={{ "&:hover": { cursor: "pointer", color: medium } }}
@@ -131,16 +130,17 @@ const MyPostWidget = ({ picturePath }) => {
             Image
           </Typography>
         </FlexBetween>
+
         {isNonMobileScreens ? (
           <>
             <FlexBetween gap="0.25rem">
               <GifBoxOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Click</Typography>
+              <Typography color={mediumMain}>Clip</Typography>
             </FlexBetween>
 
             <FlexBetween gap="0.25rem">
               <AttachFileOutlined sx={{ color: mediumMain }} />
-              <Typography color={mediumMain}>Attachement</Typography>
+              <Typography color={mediumMain}>Attachment</Typography>
             </FlexBetween>
 
             <FlexBetween gap="0.25rem">
@@ -149,12 +149,11 @@ const MyPostWidget = ({ picturePath }) => {
             </FlexBetween>
           </>
         ) : (
-          <>
-            <FlexBetween gap="0.25rem">
-              <MoreHorizOutlined sx={{ color: mediumMain }} />
-            </FlexBetween>
-          </>
+          <FlexBetween gap="0.25rem">
+            <MoreHorizOutlined sx={{ color: mediumMain }} />
+          </FlexBetween>
         )}
+
         <Button
           disabled={!post}
           onClick={handlePost}
